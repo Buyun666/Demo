@@ -1,0 +1,109 @@
+cmake_minimum_required(VERSION 3.5)
+project(socket_client VERSION 1.3.2)
+set(DEBIAN_VERSION "1.0.0.0621")
+
+if(NOT DEFINED DEBIAN_VERSION)
+  set(DEBIAN_VERSION ${PROJECT_VERSION})
+endif()
+
+# Default to C99
+if(NOT CMAKE_C_STANDARD)
+  set(CMAKE_C_STANDARD 99)
+endif()
+
+# Default to C++14
+if(NOT CMAKE_CXX_STANDARD)
+  set(CMAKE_CXX_STANDARD 14)
+endif()
+
+if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+  add_compile_options(-Wall -Wextra -Wpedantic)
+endif()
+
+# find dependencies
+find_package(ament_cmake REQUIRED)
+find_package(rclcpp REQUIRED)
+find_package(perception_interfaces REQUIRED)
+find_package(std_msgs REQUIRED)
+find_package(perception_olmap_msgs REQUIRED)
+find_package(perception_pilot_msgs REQUIRED)
+find_package(perception_detection_msgs REQUIRED)
+find_package(localization_msg REQUIRED)
+find_package(tf2_ros REQUIRED)
+find_package(jsoncpp  REQUIRED)
+find_package(xos REQUIRED)
+find_package(mem_msgs REQUIRED)
+find_package(map_engine_msgs REQUIRED)
+find_package(Protobuf REQUIRED)
+
+find_package(rclcpp_components REQUIRED)
+find_package(rosidl_default_generators REQUIRED)
+find_package(builtin_interfaces REQUIRED)
+
+# ---------------- proto ---------------
+if (PROTOBUF_FOUND)
+    message("protobuf found")
+else ()
+    message("protobuf not found")
+endif()
+
+file(GLOB PROTOS 
+  proto/basics.proto
+  proto/localization.proto
+  proto/perception.proto
+  proto/mem.proto
+  proto/map_engine.proto
+  proto/client_msg.proto
+  proto/server_msg.proto
+)
+
+PROTOBUF_GENERATE_CPP(PROTO_SRCS PROTO_HDRS ${PROTOS})
+# message("PROTO_HDRS = ${PROTO_HDRS}")
+
+add_library(socket_proto SHARED ${PROTO_HDRS} ${PROTO_SRCS})
+target_include_directories(socket_proto
+        PUBLIC ${CMAKE_CURRENT_BINARY_DIR}
+        PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}
+        PUBLIC ${PROTOBUF_INCLUDE_DIRS}
+)
+
+###########
+## Build ##
+###########
+
+## Specify additional locations of header files
+## Your package locations should be listed before other locations
+include_directories(
+  include
+  ${Boost_INCLUDE_DIRS}
+)
+
+SET(ROS_MSG
+  std_msgs tf2_ros perception_interfaces perception_olmap_msgs perception_pilot_msgs perception_detection_msgs
+  localization_msg  builtin_interfaces xos mem_msgs map_engine_msgs
+)
+
+add_executable(${PROJECT_NAME} 
+  src/main.cpp
+  src/ros_pub_manage.cpp
+  src/ros_sub_manage.cpp
+  src/parameters.cpp
+  src/socket_manage.cpp
+  src/data_updater.cpp
+  src/tools.cpp
+  ${PROTO_HDRS} 
+  ${PROTO_SRCS}
+)
+
+ament_target_dependencies(${PROJECT_NAME}  rclcpp jsoncpp ${ROS_MSG})
+
+target_link_libraries(${PROJECT_NAME} jsoncpp socket_proto protobuf)
+
+install(DIRECTORY config DESTINATION lib)
+
+install(DIRECTORY launch DESTINATION share/${PROJECT_NAME} FILES_MATCHING PATTERN "*.py")
+install(DIRECTORY launch DESTINATION share/${PROJECT_NAME} FILES_MATCHING PATTERN "*.launch")
+
+install(TARGETS ${PROJECT_NAME} DESTINATION lib/${PROJECT_NAME})
+ament_package()
+

@@ -1,3 +1,0 @@
-/home/zhusiyao/Documents/CPPCODE/CPPtest/Demo/Demo/testSystemTime/build/CMakeFiles/demo.dir
-/home/zhusiyao/Documents/CPPCODE/CPPtest/Demo/Demo/testSystemTime/build/CMakeFiles/edit_cache.dir
-/home/zhusiyao/Documents/CPPCODE/CPPtest/Demo/Demo/testSystemTime/build/CMakeFiles/rebuild_cache.dir

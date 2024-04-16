@@ -48,3 +48,6 @@ set( SOURCES
 # 指定生成目标
 add_executable(${PROJECT_NAME} ${SOURCES} ${PROTO_SRCS} ${PROTO_HDRS})
 target_link_libraries(${PROJECT_NAME} PUBLIC ${Boost_LIBRARIES} protobuf)
+
+add_executable(${PROJECT_NAME}2 src/demo2.cpp ${PROTO_SRCS} ${PROTO_HDRS})
+target_link_libraries(${PROJECT_NAME}2 PUBLIC ${Boost_LIBRARIES} protobuf)

@@ -8,3 +8,16 @@ message Frame {
 message Frames {
   repeated Frame frames = 1;
 }
+
+message person {
+  int32 age = 1;
+  int32 userid = 2;
+  string name = 3;
+}
+
+message test {
+  int32 time = 1;
+  int32 userid = 2;
+  float price = 3;
+  string desc = 4;
+}

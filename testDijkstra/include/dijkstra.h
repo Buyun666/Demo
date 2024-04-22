@@ -5,6 +5,7 @@
 #include <fstream>
 #include <iostream>
 #include <vector>
+#include <unordered_map>
 
 #define MAX_VERNUM 20        // 最大顶点数
 #define MAX_VALUE 99999      // 最大权值
@@ -39,6 +40,8 @@ public:
     void creatGraph();                                  // 创建图
     void dijkstraCpt(string from);                      // dijkstra算法求解最短路径
     void displayTable(string from);                     // 输出路由表
+    void displayTable(string from, string to);          // 输出起终点路由表
+    void dijkstraCpt(string from, string to);           // dijkstra算法求解起终点最短路径
 
     void modifyEdge(string from, string to, int value); // 修改边
     void addNode(string node_name);                     // 添加顶点

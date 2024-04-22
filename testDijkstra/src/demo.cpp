@@ -9,4 +9,6 @@ int main() {
     Dijkstra mDijkstra;
     mDijkstra.creatGraph();
     mDijkstra.dijkstraCpt("r1");
+    std::cout << "********************" << std::endl;
+    mDijkstra.dijkstraCpt("r1", "r5");
 }
